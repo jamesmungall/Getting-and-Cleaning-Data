@@ -1,0 +1,29 @@
+MySQL connection
+========================================================
+
+I have had to add the ip address of this computer to site5 admin -> Databases -> remote access MySQL -> add new host
+  On 10th June 2015 this was 90.244.198.25
+
+Then I can connect.
+```{r}
+jamesmungallDb <- dbConnect(MySQL(),user="jamesmun_site2", password="23lkj43",host="jamesmungall.co.uk")                    
+result <- dbGetQuery(jamesmungallDb,"show databases;"); dbDisconnect(jamesmungallDb);
+```
+
+```{r}
+chemBackup <- dbConnect(MySQL(),user="jamesmun_site2", password="23lkj43",host="jamesmungall.co.uk",  db="jamesmun_chemistryBackup")
+allTables <- dbListTables(chemBackup)
+length(allTables)
+```
+
+```{r}
+dbListFields(chemBackup,"j25_content")
+dbGetQuery(chemBackup, "select count(*) from j25_content")
+j25_contentData <- dbReadTable(chemBackup, "j25_content")
+View(j25_contentData)
+```
+
+```{r}
+query <- dbSendQuery(chemBackup, "select * from j25_content where hits between 1000 and 3000")
+hitsQuery <- fetch(query)
+
