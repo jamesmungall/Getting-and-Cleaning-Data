@@ -1,0 +1,5 @@
+.*
+!/.gitignore
+/UCI_HAR_Dataset
+/data
+GettingCleaningData.Rproj
