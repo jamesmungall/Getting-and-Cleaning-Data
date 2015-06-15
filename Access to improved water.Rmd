@@ -1,0 +1,58 @@
+Access to improved water resources by income
+========================================================
+
+Use http://www.wssinfo.org/data-estimates/tables/ to select data.
+Export as '/Users/jamesmungall/MyR/GettingCleaningData/data/accessToImprovedWater.csv'
+
+```{r}
+filename = '/Users/jamesmungall/MyR/GettingCleaningData/data/accessToImprovedWater.csv'
+accessToImprovedWater <- read.csv(filename, stringsAsFactors=F)
+accessToImprovedWater <- tbl_df(accessToImprovedWater)
+accessToImprovedWater <- accessToImprovedWater %>% select(name=X,improvedWater=Water)
+accessToImprovedWater <- accessToImprovedWater[4:238,]
+View(accessToImprovedWater)
+                              
+```
+
+```{r}
+url <- 'http://api.worldbank.org/countries?region=SAS&format=json'
+savedFile <- "/Users/jamesmungall/MyR/GettingCleaningData/data/worldBank/regionSAS.json"
+download.file(url, destfile = savedFile, method = "curl")
+library(jsonlite)
+jsonData <- fromJSON(savedFile)
+regionSAS <- jsonData[[2]]
+View(regionSAS)
+SAScountries <-regionSAS %>% select(name)
+View(SAScountries)
+
+left_join(SAScountries,accessToImprovedWater,by='name')
+```
+
+
+```{r}
+url <- 'http://api.worldbank.org/countries?region=SSF&format=json'
+savedFile <- "/Users/jamesmungall/MyR/GettingCleaningData/data/worldBank/regionSSF.json"
+download.file(url, destfile = savedFile, method = "curl")
+library(jsonlite)
+jsonData <- fromJSON(savedFile)
+regionSSF <- jsonData[[2]]
+
+SSFcountries <-regionSSF %>% select(name)
+
+
+result = left_join(SSFcountries,accessToImprovedWater,by='name')
+View(result)
+```
+
+```{r}
+url <- 'http://api.worldbank.org/countries?region=MEA&format=json'
+savedFile <- "/Users/jamesmungall/MyR/GettingCleaningData/data/worldBank/regionMEA.json"
+download.file(url, destfile = savedFile, method = "curl")
+library(jsonlite)
+jsonData <- fromJSON(savedFile)
+regionMEA <- jsonData[[2]]
+View(regionMEA)
+MEAcountries <-regionMEA %>% select(name)
+
+View(left_join(MEAcountries,accessToImprovedWater,by='name'))
+```
