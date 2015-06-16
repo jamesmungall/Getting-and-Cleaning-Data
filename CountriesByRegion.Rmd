@@ -1,0 +1,84 @@
+Countries by Region
+========================================================
+
+Json files of countries by region have been downloaded to 
+/Users/jamesmungall/MyR/GettingCleaningData/data/worldBank/Region/
+
+```{r}
+url <- 'http://api.worldbank.org/countries?region=SAS&format=json'
+savedFile <- "/Users/jamesmungall/MyR/GettingCleaningData/data/worldBank/regionSAS.json"
+download.file(url, destfile = savedFile, method = "curl")
+```
+which includes the following files
+
+regionEAP.json  East Asia and Pacific (developing only)
+regionEAS.json  East Asian and Pacific
+regionECA.json  Europe and Central Asia
+regionLAC.json  Latin America and Carribean
+regionMEA.json  Middle East and North Africa
+regionNAC.json  North America
+regionSAS.json  South Asia
+regionSSF.json  Sub-Saharan Africa
+
+To load the table of countries from a particular region, for example East Asia and Pacific, use the following code.
+```{r}
+savedFile <- "/Users/jamesmungall/MyR/GettingCleaningData/data/worldBank/Region/regionEAS.json"
+library(jsonlite)
+jsonData <- fromJSON(savedFile)
+regionEAS <- jsonData[[2]]; # result is a list of length 2 of which we want the second element
+regionEAS <- flatten(regionEAS); # removes nesting of data tables
+regionEAS <- tbl_df(regionEAS); # dplyr more user friendly
+View(regionEAS)
+
+```
+
+To then count the number of countries in each income level use:
+```{r}
+regionEAS %>% count(incomeLevel.id)
+```
+
+Repeating over all regions.
+```{r}
+savedFile <- "/Users/jamesmungall/MyR/GettingCleaningData/data/worldBank/Region/regionECA.json"
+jsonData <- fromJSON(savedFile)
+regionECA <- jsonData[[2]]; # result is a list of length 2 of which we want the second element
+regionECA <- flatten(regionECA); # removes nesting of data tables
+regionECA <- tbl_df(regionECA); # dplyr more user friendly
+regionECA %>% count(incomeLevel.value)
+```
+
+```{r}
+savedFile <- "/Users/jamesmungall/MyR/GettingCleaningData/data/worldBank/Region/regionLAC.json"
+jsonData <- fromJSON(savedFile)
+regionECA <- jsonData[[2]] %>% flatten() %>% tbl_df()
+regionECA %>% count(incomeLevel.value)
+```
+
+```{r}
+savedFile <- "/Users/jamesmungall/MyR/GettingCleaningData/data/worldBank/Region/regionMEA.json"
+jsonData <- fromJSON(savedFile)
+region <- jsonData[[2]] %>% flatten() %>% tbl_df()
+region %>% count(incomeLevel.value)
+```
+
+```{r}
+savedFile <- "/Users/jamesmungall/MyR/GettingCleaningData/data/worldBank/Region/regionNAC.json"
+jsonData <- fromJSON(savedFile)
+region <- jsonData[[2]] %>% flatten() %>% tbl_df()
+region %>% count(incomeLevel.value)
+```
+
+```{r}
+savedFile <- "/Users/jamesmungall/MyR/GettingCleaningData/data/worldBank/Region/regionSAS.json"
+jsonData <- fromJSON(savedFile)
+region <- jsonData[[2]] %>% flatten() %>% tbl_df()
+region %>% count(incomeLevel.value)
+```
+
+```{r}
+savedFile <- "/Users/jamesmungall/MyR/GettingCleaningData/data/worldBank/Region/regionSSF.json"
+jsonData <- fromJSON(savedFile)
+region <- jsonData[[2]] %>% flatten() %>% tbl_df()
+region %>% count(incomeLevel.value)
+```
+
